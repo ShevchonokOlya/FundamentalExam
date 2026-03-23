@@ -580,7 +580,6 @@ def pirates():
             attack_geography[town][1] += gold
             print(f"{gold} gold added to the city treasury. {town} now has {attack_geography[town][1]} gold.")
 
-
     if attack_geography:
         print(f"Ahoy, Captain! There are {len(attack_geography)} wealthy settlements to go to:")
         for town, [people, gold] in attack_geography.items():
@@ -589,5 +588,80 @@ def pirates():
         print(f"Ahoy, Captain! All targets have been plundered and destroyed!")
 
 
+def the_imitations_game():
+    encrypted_message = input()
+    while True:
+        command_line = input()
+        if command_line == "Decode":
+            break
+        else:
+            command, second_parameter, *third_parameter = command_line.split('|')
+            if command == "Move":
+                number = int(second_parameter)
+                encrypted_message = encrypted_message[number:] + encrypted_message[:number]
+            elif command == "Insert":
+                number = int(second_parameter)
+                encrypted_message = encrypted_message[:number] + third_parameter[0] + encrypted_message[number:]
+            elif command == "ChangeAll":
+                if second_parameter in encrypted_message:
+                    encrypted_message = encrypted_message.replace(second_parameter, third_parameter[0])
 
-pirates()
+    print(f"The decrypted message is: {encrypted_message}")
+
+
+def we_need_for_speed():
+    car_rate = {}
+    for _ in range(int(input())):
+        car, mileage, fuel = [int(word) if word.isdigit() else word for word in input().split("|")]
+        if car not in car_rate:
+            car_rate[car] = car_rate.get(car, [0, 0])
+        car_rate[car][0] = mileage
+        car_rate[car][1] = fuel
+
+    while True:
+        command_line = input()
+        if command_line == "Stop":
+            break
+        command, car, second, *third_parameter = [int(word) if word.isdigit() else word for word in
+                                                  command_line.split(" : ")]
+        if car in car_rate:
+            if command == "Drive":
+                distance = second
+                fuel_needs = third_parameter[0]
+
+                if car_rate[car][1] >= fuel_needs:
+                    car_rate[car][0] += distance
+                    car_rate[car][1] -= fuel_needs
+
+                    print(f"{car} driven for {distance} kilometers. {fuel_needs} liters of fuel consumed.")
+
+                else:
+                    print("Not enough fuel to make that ride")
+
+                if car_rate[car][0] >= 100_000:
+                    print(f"Time to sell the {car}!")
+                    del car_rate[car]
+
+            elif command == "Refuel":
+
+                refill_rate = second
+                current_amount = car_rate[car][1]
+                fuel = min(75, car_rate[car][1] + refill_rate)
+                car_rate[car][1] = fuel
+                print(f"{car} refueled with {fuel - current_amount} liters")
+
+            elif command == "Revert":
+                amount_reverted = second
+                current_amount_km = car_rate[car][0] - amount_reverted
+
+                if current_amount_km < 10000:
+                    car_rate[car][0] = 10_000
+                else:
+                    car_rate[car][0] = current_amount_km
+                    print(f"{car} mileage decreased by {amount_reverted} kilometers")
+
+    for car, parameters in car_rate.items():
+        mileage, fuel = parameters
+        print(f"{car} -> Mileage: {parameters[0]} kms, Fuel in the tank: {parameters[1]} lt.")
+
+
