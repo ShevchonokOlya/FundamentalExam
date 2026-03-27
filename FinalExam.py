@@ -665,3 +665,118 @@ def we_need_for_speed():
         print(f"{car} -> Mileage: {parameters[0]} kms, Fuel in the tank: {parameters[1]} lt.")
 
 
+def easter_eggs():
+    import re
+    colors = []
+    pattern = r'[#@]+(?P<color>\b[a-z]{3,}\b)[#@]+[^a-z0-9]+\/+(?P<amount>\d+)\/+'
+    matches = re.finditer(pattern, input())
+    for match in matches:
+        color = match.group("color")
+        amount = match.group("amount")
+        print(f"You found {amount} {color} eggs!")
+
+
+def galactic_code_decryption():
+    first_message = input()
+    while True:
+        command_line = input()
+        if command_line == "Finalize":
+            break
+        else:
+            command, *parameters = command_line.split()
+
+        if command == "Encrypt":
+            first_message = first_message[::-1]
+            print(first_message)
+        elif command == "Decrypt":
+            first_message = first_message.swapcase()
+            print(first_message)
+
+        elif command == "Substitute":
+            old_char = parameters[0]
+            new_char = parameters[1]
+            if old_char not in first_message:
+                print("Character not found.")
+            else:
+                first_message = first_message.replace(old_char, new_char)
+                print(first_message)
+
+        elif command == "Scramble":
+            index = int(parameters[0])
+            new_char = parameters[1]
+            if 0 <= index < len(first_message):
+                first_message = first_message[:index] + new_char + first_message[index + 1:]
+                print(first_message)
+            else:
+                print("Index out of bounds.")
+
+        elif command == "Remove":
+            substring = parameters[0]
+            first_message = first_message.replace(substring, "")
+            print(first_message)
+        else:
+            print("Invalid command detected!")
+
+
+def registration():
+    username = input().strip()
+    while True:
+        command_line = input()
+        if command_line == "Registration":
+            break
+        else:
+            command, first, *second = command_line.split()
+        if command == "Letters":
+
+            username = username.lower() if first == "Lower" else username.upper()
+            print(username)
+
+        elif command == "Reverse":
+            startIndex = int(first)
+            endIndex = int(second[0])
+
+            if 0 <= startIndex <= endIndex < len(username):
+                substring = username[startIndex:endIndex + 1][::-1]
+                print(substring)
+
+
+        elif command == "Substring":
+            if first in username:
+                username = username.replace(first, "")
+                print(username)
+            else:
+                print(f"The username {username} doesn't contain {first}.")
+
+        elif command == "Replace":
+            if first in username:
+                username = username.replace(first, "-")
+            print(username)
+
+        elif command == "IsValid":
+            if first in username:
+                print("Valid username.")
+            else:
+                print(f"{first} must be contained in your username.")
+
+
+def ad_astronaut():
+    import re
+    pattern = r'([#|])(?P<product>[a-zA-Z\s]+)\1(?P<date>\d{2}\/\d{2}\/\d{2})\1(?P<cal>\d+)\1'
+    text_string = input()
+    matches = re.finditer(pattern, text_string)
+    total_calories = 0
+    product_basket = []
+
+    for match in matches:
+        product = match.group("product")
+        expiration_date = match.group("date")
+        calories = int(match.group("cal"))
+        product_basket.append([product, expiration_date, calories])
+        total_calories += calories
+
+    print(f'You have food to last you for: {total_calories // 2000} days!')
+
+    for item_name, date, cal in product_basket:
+        print(f"Item: {item_name}, Best before: {date}, Nutrition: {cal}")
+
+ad_astronaut()

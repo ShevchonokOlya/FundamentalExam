@@ -121,3 +121,43 @@ def music_playlist():
     print("Songs to Play:")
     print("\n".join(list_of_songs))
 
+def moving_targets():
+
+    targets = [int(t) for t in input().split()]
+
+    while True:
+        command_line = input()
+        if command_line == "End":
+            break
+        else:
+            command, second_parameter, third_parameter = command_line.split()
+            index = int(second_parameter)
+
+
+            if command == "Shoot":
+                power = int(third_parameter)
+                if index in range(0, len(targets)):
+                    targets[index] -= power
+                    if targets[index] <= 0:
+                        targets.pop(index)
+
+
+            elif command == "Add":
+                value = int(third_parameter)
+                if index in range(0, len(targets)):
+                    targets.insert(index, value)
+                else:
+                    print("Invalid placement!")
+                pass
+
+            elif command == "Strike":
+                shift = int(third_parameter)
+                if index in range(0, len(targets)) and index + shift < len(targets) and  index - shift >= 0:
+                    targets = targets[:index - shift] + targets[index + shift + 1:]
+                else:
+                    print("Strike missed!")
+
+
+    print("|".join(map(str, targets)))
+
+moving_targets()
